@@ -1,0 +1,122 @@
+version: "3.8"
+
+services:
+  robot-opt:
+    image: robot-skbf-p2-16:latest
+    container_name: robot-opt
+    ports:
+      - "9102:9102"
+      - "9101:80"
+    environment:
+      # Spring Boot & Server
+      - SPRING_APPLICATION_NAME=slik-engine
+      - SERVER_PORT=9102
+
+      # CBAS Engine Config
+      - CBAS_ENGINE_NAME=OPERATOR
+      - CBAS_ROLE=REQUESTOR
+      - CBAS_ENGINE_CORE_ENDPOINT=http://110.239.67.31:9100/
+      - CBAS_ENGINE_CORE_SOCKETIO=http://localhost:9101/
+      - CBAS_ENGINE_CORE_CAPTCHA_ENDPOINT=http://110.239.67.31:9200/
+      - CBAS_ENGINE_FOLDER=/app/results
+      - CBAS_ENGINE_ML_TOFOLDER=false
+
+      # SLIK Config
+      - CBAS_SLIK_PROCESS=true
+      - CBAS_SLIK_DRIVE=/home/dev/.cache/ms-playwright/chromium-1169/chrome-linux/chrome
+      - CBAS_SLIK_PROXY_USE=false
+      - CBAS_SLIK_PROXY_URL=
+      - CBAS_SLIK_HEADLESS=false
+      - CBAS_SLIK_PROFILE_REQUESTOR=false
+
+      # Scheduler Rates
+      - CBAS_RATE_HEARTBEAT=10000
+      - CBAS_RATE_PREVIEW=5000
+      - CBAS_RATE_LOGINCHECK=60000
+      - CBAS_RATE_IDLE=600000
+      - CBAS_RATE_LOGOUT_DURATION=1
+      - CBAS_RATE_CRASH:100000
+
+      # ML Folder
+      - CBAS_ML_FOLDER=/app/ml
+
+      # Cloud Storage
+      - ERANYA_KEY=
+      - ERANYA_SECRET=
+      - ERANYA_ENDPOINT=
+      - ERANYA_BUCKET=
+
+      # Database
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:cbasengine
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+      # Logging
+      - LOGGING_LISTENER=info
+
+    volumes:
+      - ./result_batch:/app/results
+      - ./log/opt:/log
+
+  robot-spv:
+    image: robot-skbf-p2-16:latest
+    container_name: robot-spv
+    ports:
+      - "9103:9103"
+      - "9104:80"
+    environment:
+      # Spring Boot & Server
+      - SPRING_APPLICATION_NAME=slik-engine
+      - SERVER_PORT=9103
+
+      # CBAS Engine Config
+      - CBAS_ENGINE_NAME=SUPERVISOR
+      - CBAS_ROLE=APPROVER
+      - CBAS_ENGINE_CORE_ENDPOINT=http://110.239.67.31:9100/
+      - CBAS_ENGINE_CORE_SOCKETIO=http://localhost:9104/
+      - CBAS_ENGINE_CORE_CAPTCHA_ENDPOINT=http://110.239.67.31:9200/
+      - CBAS_ENGINE_FOLDER=/app/results
+      - CBAS_ENGINE_ML_TOFOLDER=false
+
+      # SLIK Config
+      - CBAS_SLIK_PROCESS=true
+      - CBAS_SLIK_DRIVE=/home/dev/.cache/ms-playwright/chromium-1169/chrome-linux/chrome
+      - CBAS_SLIK_PROXY_USE=false
+      - CBAS_SLIK_PROXY_URL=
+      - CBAS_SLIK_HEADLESS=false
+      - CBAS_SLIK_PROFILE_REQUESTOR=false
+
+      # Scheduler Rates
+      - CBAS_RATE_HEARTBEAT=10000
+      - CBAS_RATE_PREVIEW=5000
+      - CBAS_RATE_LOGINCHECK=60000
+      - CBAS_RATE_IDLE=600000
+      - CBAS_RATE_LOGOUT_DURATION=1
+      - CBAS_RATE_CRASH:100000
+
+      # ML Folder
+      - CBAS_ML_FOLDER=/app/ml
+
+      # Cloud Storage
+      - ERANYA_KEY=
+      - ERANYA_SECRET=
+      - ERANYA_ENDPOINT=
+      - ERANYA_BUCKET=
+
+      # Database
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:cbasengine
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+      # Logging
+      - LOGGING_LISTENER=info
+
+    volumes:
+      - ./result_batch:/app/results
+      - ./log/spv:/log

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slik-engine-playwright
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slik-engine-playwright
+  template:
+    metadata:
+      labels:
+        app: slik-engine-playwright
+    spec:
+      containers:
+        - name: slik-engine-playwright
+          image: docker.io/library/slik-robot-playwright
+          ports:
+            - containerPort: 9102
+          env:
+            - name: ROBOT_NAME
+              value: "ROBOT01"  # or "true", "yes", "no", etc.
+            - name: LOGGING_LISTENER
+              value: "info"  # or "true", "yes", "no", etc.
+            - name: CORE_ENDPOINT
+              value: "https://cbas-be.ilkeiapps.com/"  # or "true", "yes", "no", etc.
+            - name: CAPTCHA_ENDPOINT
+              value: "http://110.239.90.21:8000/"  # or "true", "yes", "no", etc.
+            - name: ENGINE_FOLDER
+              value: "/app/data"  # or "true", "yes", "no", etc.
+            - name: SLIK_PROCESS
+              value: "true"  # or "true", "yes", "no", etc.
+            - name: SLIK_BROWSER
+              value: "chrome"  # or "true", "yes", "no", etc.
+            - name: SLIK_USE_PROXY
+              value: "false"  # or "true", "yes", "no", etc.
+            - name: SLIK_PROXY_URL
+              value: "-"  # or "true", "yes", "no", etc.
+            - name: SLIK_HEADLESS
+              value: "true"  # or "true", "yes", "no", etc.
+            - name: SLIK_PROFILE_REQUESTOR
+              value: "false"  # or "true", "yes", "no", etc.
+            - name: SLIK_HEARTBEAT
+              value: "1000"  # or "true", "yes", "no", etc.
+            - name: SLIK_PREVIEW
+              value: "5000"  # or "true", "yes", "no", etc.
+            - name: SLIK_LOGIN_CHECK
+              value: "60000"  # or "true", "yes", "no", etc.
+            - name: SLIK_IDLE
+              value: "600000"  # or "true", "yes", "no", etc.
+            - name: SLIK_LOGOUT_INMINUTE
+              value: "1"  # or "true", "yes", "no", etc.
+            - name: JAVA_OPTS
+              value: "-Xmx512m -Djava.awt.headless=false"
+            - name: DISPLAY
+              value: ":2"
